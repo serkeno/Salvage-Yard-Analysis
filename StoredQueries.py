@@ -15,8 +15,6 @@ def db_connection():
 
 def part_sales():
 
-    import PartSalesPreprocessing as PSP
-
     # Define your connection string
     conn_str = db_connection()
 
@@ -25,16 +23,17 @@ def part_sales():
     cursor = conn.cursor()
 
     cursor.execute("""
-    SELECT
-        Parts.LongName,
-        COUNT(Qty) AS NumberOfPartsSold,
-        SUM(PosSalesDtl.Qty * PosSalesDtl.UnitPrice) AS TotalPrice,
-        CAST(PosSalesDtl.CreDtTm AS DATE) AS DateOfSale
-    FROM [CRUSH_1102].[dbo].[PosSalesDtl]
-    JOIN [CRUSH_1102].[dbo].[Parts] ON Parts.PartRno = PosSalesDtl.PartRno
+SELECT
+    
+	  COUNT(Qty) AS NumberOfPartsSold
+	  ,SUM(PosSalesDtl.UnitPrice) AS TotalPrice
+	  ,CAST(PosSalesDtl.CreDtTm AS DATE) AS DateOfSale
+
+  FROM [CRUSH_1102].[dbo].[PosSalesDtl]
+  JOIN [CRUSH_1102].[dbo].[Parts] ON Parts.PartRno = PosSalesDtl.PartRno
     WHERE PosSalesDtl.PartRno NOT LIKE 285 --GATE FEE ID
-    GROUP BY Parts.LongName, CAST(PosSalesDtl.CreDtTm AS DATE)
-    ORDER BY DateOfSale
+	GROUP BY CAST(PosSalesDtl.CreDtTm AS DATE), CAST(PosSalesDtl.CreDtTm AS DATE), CAST(PosSalesDtl.CreDtTm AS DATE)
+	ORDER BY DateOfSale
 """)
 
     rows = cursor.fetchall()
@@ -43,14 +42,10 @@ def part_sales():
 
     conn.close()
 
-    # Group all sales by day, ignoring category.
-    part_sales_df = PSP.sum_part_sales_by_category_by_day(part_sales_df)
-
     return part_sales_df
 
 
 def vehicle_info():
-
     import VehicleInfoPreprocessing as VIP
 
     # Define your connection string
@@ -85,6 +80,3 @@ def vehicle_info():
     vehicle_info_df = VIP.remove_missing_vehicle_days(vehicle_info_df)
 
     return vehicle_info_df
-
-
-
