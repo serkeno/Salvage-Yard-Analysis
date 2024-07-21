@@ -3,12 +3,8 @@ import pandas as pd
 import VehiclePresencePreprocessing
 import VehicleInfoPreprocessing as VIP
 
-def vehicle_presence(presence_type="binary", vehicle_type="model", feature_ratio=100, target_type="TotalPartsSold"):
+def vehicle_presence(presence_type="binary", vehicle_type="model", target_type="TotalPartsSold"):
     """
-
-    :param feature_ratio: The feature ratio is either 'None' to indicate that no ratio should be applied to the number
-    of feature columns to records in the dataframe. If a positive integer is given it will be sent to the
-    VehiclePresencePreprocessing.select_top_models() method in the form of records/feature_ratio.
 
     :param presence_type: Determines the type of presence used, default is binary, where the dataframe will only
     indicate whether a vehicle type is present on each day. Alternatively, you can select 'continuous' which will cause
@@ -49,10 +45,6 @@ def vehicle_presence(presence_type="binary", vehicle_type="model", feature_ratio
 
     # Drop Records where both YardEnterDate AND YardRemovalDate are missing.
     vehicle_info_df = VIP.remove_missing_vehicle_days(vehicle_info_df)
-
-    if feature_ratio != "None" and isinstance(feature_ratio, int) is False or isinstance(feature_ratio,
-                                                                                         int) is True and feature_ratio <= 0:
-        raise ValueError("Feature ratio must be either 'None' or a positive integer.")
 
     valid_presence_type_parameters = ["binary", "continuous"]
 
@@ -126,12 +118,5 @@ def vehicle_presence(presence_type="binary", vehicle_type="model", feature_ratio
         cleaned_df = merged_df.dropna(subset=['TotalPrice'])
     else:
         raise ValueError("target_type must be either 'TotalPartsSold' or 'TotalPrice'")
-    # Return the dataframe without adjusting record to feature ratios
-    if feature_ratio == "None":
-        return cleaned_df
-    # Filter the dataframe feature columns to fit a specific ratio
-    else:
-        # Select Top models to improve record to feature ratio
-        filtered_df = VehiclePresencePreprocessing.select_top_models(cleaned_df)
 
-        return filtered_df
+    return cleaned_df
