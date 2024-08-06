@@ -8,7 +8,7 @@ import VehiclePresencePreprocessing
 
 def db_connection():
     return '''DRIVER={ODBC Driver 17 for SQL Server};
-        SERVER=VMDEV1\\SQLEXPRESS;
+        SERVER=MSI;
         DATABASE=CRUSH_1102;
         Trusted_Connection=yes;'''
 
@@ -80,3 +80,38 @@ def vehicle_info():
     vehicle_info_df = VIP.remove_missing_vehicle_days(vehicle_info_df)
 
     return vehicle_info_df
+
+def POS_transactions():
+
+    conn_str = db_connection()
+
+    conn = pyodbc.connect(conn_str)
+
+    cursor = conn.cursor()
+
+    cursor.execute("""
+   SELECT p.[PartRno]
+      ,p.[PartId]
+      ,p.[LongName] as "PartName"
+      ,s.[PosSaleDtlRno] as "LineItemID"
+      ,s.[PosSaleHdrRno] as "TransactionID"
+      ,s.[Seq]
+      ,s.[PartRno]
+      ,s.[PartPriceRno]
+      ,s.[Qty]
+      ,s.[PartMeasureQty]
+      ,s.[UnitPrice]
+      ,s.[ExtPrice]
+      ,s.[CreDtTm]
+FROM [CRUSH_1102].[dbo].[Parts] p
+JOIN [CRUSH_1102].[dbo].[PosSalesDtl] s
+ON p.[PartRno] = s.[PartRno];
+    """)
+
+    rows = cursor.fetchall()
+    columns = [column[0] for column in cursor.description]
+    POS_df = pd.DataFrame.from_records(rows, columns=columns)
+
+    conn.close()
+
+    return POS_df

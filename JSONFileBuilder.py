@@ -43,7 +43,6 @@ def build_binary_vehicle_presence():
 
 
 def build_continuous_vehicle_presence():
-    # TODO make sure this creates the JSON file properly so it can be reloaded into Sagemaker for use in ML model
     import json
     from datetime import datetime, timezone
     import os
