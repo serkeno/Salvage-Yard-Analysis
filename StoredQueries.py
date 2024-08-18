@@ -1,10 +1,6 @@
 import math
-
 import pandas as pd
 import pyodbc
-
-import VehiclePresencePreprocessing
-
 
 def db_connection():
     return '''DRIVER={ODBC Driver 17 for SQL Server};
