@@ -33,7 +33,7 @@ def impute_yard_days(vehicle_info_df):
 
 def remove_missing_vehicle_days(vehicle_info_df):
     """
-
+    Removes records where neither the yard entry or exit date is known.
     :param vehicle_info_df:
     :return: return a vehicle_info_df where records with neither a YardEnterDate nor YardRemovalDate exist.
     """

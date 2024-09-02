@@ -1,8 +1,11 @@
-import math
 import pandas as pd
 import pyodbc
 
 def db_connection():
+    """
+    Returns a connection string to the database.
+    :return:
+    """
     return '''DRIVER={ODBC Driver 17 for SQL Server};
         SERVER=MSI;
         DATABASE=CRUSH_1102;
@@ -10,6 +13,11 @@ def db_connection():
 
 
 def part_sales():
+    """
+    Pulls part sale data and transforms it into a pandas dataframe, removing the GATE FEE. This is intended to be used for analyzing basic information about
+    part sales, such as
+    :return: Pandas Dataframe
+    """
 
     # Define your connection string
     conn_str = db_connection()
@@ -42,6 +50,11 @@ SELECT
 
 
 def vehicle_info():
+    """
+    Creates a Pandas Dataframe from the Vehicles table in the CRUSH database. It is intended for use in analysis
+    of vehicle presence on the lot, including the total number of Yard-Days for each vehicle type.
+    :return: Pandas Dataframe
+    """
     import VehicleInfoPreprocessing as VIP
 
     # Define your connection string
@@ -78,7 +91,12 @@ def vehicle_info():
     return vehicle_info_df
 
 def POS_transactions():
-
+    """
+    Creates a Pandas Dataframe from the Parts and PosSalesDtl tables in the CRUSH database. Intended to be used in analysis
+    of POS_transactions, such as finding the number of each item sold, average price of each item type, and which types
+    of items are most likely to be sold together.
+    :return: Pandas Dataframe
+    """
     conn_str = db_connection()
 
     conn = pyodbc.connect(conn_str)
