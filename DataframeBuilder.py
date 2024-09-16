@@ -1,6 +1,4 @@
 import pandas as pd
-
-import VehiclePresencePreprocessing
 import VehicleInfoPreprocessing as VIP
 
 def vehicle_presence(presence_type="binary", vehicle_type="model", target_type="TotalPartsSold"):
@@ -36,9 +34,6 @@ def vehicle_presence(presence_type="binary", vehicle_type="model", target_type="
         part_sales_df = part_sales_df.drop("TotalPartsSold", axis=1)
     else:
         raise ValueError("target_type must be either 'TotalPartsSold' or 'TotalPrice'")
-
-    # Group all sales by day, ignoring category.
-    # part_sales_df = PSP.sum_part_sales_by_category_by_day(part_sales_df)
 
     # Fill in the records when either YardEnterDate or YardRemovalDate is missing
     vehicle_info_df = VIP.impute_yard_days(vehicle_info_df)

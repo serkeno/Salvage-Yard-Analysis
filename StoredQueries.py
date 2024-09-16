@@ -110,10 +110,8 @@ def POS_transactions():
       ,s.[PosSaleDtlRno] as "LineItemID"
       ,s.[PosSaleHdrRno] as "TransactionID"
       ,s.[Seq]
-      ,s.[PartRno]
       ,s.[PartPriceRno]
       ,s.[Qty]
-      ,s.[PartMeasureQty]
       ,s.[UnitPrice]
       ,s.[ExtPrice]
       ,s.[CreDtTm]
